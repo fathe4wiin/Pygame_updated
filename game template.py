@@ -30,6 +30,7 @@ class player(object):
         self.standing_ani = 0
         self.jumping_ani = 0
         self.attacking_1_ani = 0
+        self.facing = 1
 
     def walking_RIGHT(self, SCREEN):
 
@@ -106,7 +107,7 @@ class player(object):
             wizard.jumping = False
             wizard.Y_VEL = wizard.JUMP_HEIGHT
 
-        if not wizard.walkingLEFT and not wizard.walkingRIGHT:
+        if not wizard.walkingLEFT and not wizard.walkingRIGHT and not wizard.attacking_1:
             SCREEN.blit(IDLE[1], (wizard.X_POS, wizard.Y_POS))
 
 
@@ -130,33 +131,46 @@ class player(object):
             wizard.attacking_1_ani = 0
             wizard.attacking_1 = False
 
-
-        SCREEN.blit(ATTACK_1[wizard.attacking_1_ani // 5], (wizard.X_POS, wizard.Y_POS))
-        wizard.attacking_1_ani += 1
-
-
-    def fireball(self):
-        pass
+        if wizard.facing == 1:
+            SCREEN.blit(ATTACK_RIGHT[wizard.attacking_1_ani // 5], (wizard.X_POS, wizard.Y_POS))
+            wizard.attacking_1_ani += 1
 
 
-
+        if wizard.facing == -1:
+            SCREEN.blit(ATTACK_LEFT[wizard.attacking_1_ani // 5], (wizard.X_POS, wizard.Y_POS))
+            wizard.attacking_1_ani += 1
 
 
 
 
 
+class projectile(object):
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.facing = wizard.facing
+        self.vel = 1 * self.facing
+        self.shooting_anim = 0
 
 
+    def shot(self, SCREEN):
 
+        if fireball.shooting_anim +1 >= 20:
+            fireball.shooting_anim = 0
 
+        SCREEN.blit(FIRE_BALL[fireball.shooting_anim // 2], (fireball.x, fireball.y))
+        fireball.x += fireball.vel
 
-
-
-
+        if fireball.x < 0 or fireball.x > 1280:
+            FIREBALLS.pop(FIREBALLS.index(fireball))
 
 
 wizard = player(400, 453, 48, 64)
+#fireball = projectile(wizard.X_POS+10, wizard.Y_POS+5, 64, 64)
 
+FIREBALLS = []
 
 
 
@@ -219,13 +233,21 @@ JUMPING = [pygame.transform.scale(pygame.image.load("assets/Wizard/jump/j1.png")
            pygame.transform.scale(pygame.image.load("assets/Wizard/jump/j10.png"), (wizard.width, wizard.height)),
            pygame.transform.scale(pygame.image.load("assets/Wizard/jump/j11.png"), (wizard.width, wizard.height))]
 
-ATTACK_1 = [pygame.transform.scale(pygame.image.load("assets/Wizard/attack1/a1_1.png"), (49, wizard.height)),
+ATTACK_RIGHT = [pygame.transform.scale(pygame.image.load("assets/Wizard/attack1/a1_1.png"), (49, wizard.height)),
           pygame.transform.scale(pygame.image.load("assets/Wizard/attack1/a1_2.png"), (46, wizard.height)),
           pygame.transform.scale(pygame.image.load("assets/Wizard/attack1/a1_3.png"), (44, wizard.height)),
           pygame.transform.scale(pygame.image.load("assets/Wizard/attack1/a1_4.png"), (44, wizard.height)),
           pygame.transform.scale(pygame.image.load("assets/Wizard/attack1/a1_5.png"), (110, wizard.height)),
           pygame.transform.scale(pygame.image.load("assets/Wizard/attack1/a1_6.png"), (99, wizard.height)),
           pygame.transform.scale(pygame.image.load("assets/Wizard/attack1/a1_7.png"), (98, wizard.height))]
+
+
+ATTACK_LEFT = [pygame.transform.flip(image, True, False) for image in ATTACK_RIGHT]
+
+#fix the image shifting probelm
+print("fix line 236!!!")
+'''for image in ATTACK_LEFT:
+    image = image.subsurface((image.get_width() - image.get_width(), 0), image.get_size())'''
 
 
 ATTACK_1_testing = [pygame.image.load("assets/Wizard/attack1/a1_1.png"),
@@ -236,16 +258,16 @@ ATTACK_1_testing = [pygame.image.load("assets/Wizard/attack1/a1_1.png"),
           pygame.image.load("assets/Wizard/attack1/a1_6.png"),
           pygame.image.load("assets/Wizard/attack1/a1_7.png")]
 
-FIRE_BALL = [pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_01.png"), (32, 32)),
-             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_02.png"), (32, 32)),
-             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_03.png"), (32, 32)),
-             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_04.png"), (32, 32)),
-             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_05.png"), (32, 32)),
-             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_06.png"), (32, 32)),
-             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_07.png"), (32, 32)),
-             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_08.png"), (32, 32)),
-             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_09.png"), (32, 32)),
-             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_10.png"), (32, 32))]
+FIRE_BALL = [pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_01.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_02.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_03.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_04.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_05.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_06.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_07.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_08.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_09.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_10.png"), (64, 64))]
 
 
 
@@ -285,6 +307,21 @@ while True:
 
     SCREEN.blit(BACKGROUND, (0, 0))
 
+    for fireball in FIREBALLS:
+        pass
+
+        #fireball = projectile(wizard.X_POS+10, wizard.Y_POS+5, 64 ,64)
+
+
+
+    for fireball in FIREBALLS:
+        fireball.shot(SCREEN)
+
+
+
+
+
+
 
 
     keys = pygame.key.get_pressed()
@@ -292,6 +329,15 @@ while True:
     if keys[pygame.K_e]:
         wizard.attacking_1 = True
         wizard.standing = False
+
+
+        FIREBALLS.append(projectile(wizard.X_POS+10, wizard.Y_POS+5, 64, 64))
+
+
+
+
+
+
 
 
 
@@ -303,6 +349,7 @@ while True:
     if keys[pygame.K_a]:
         wizard.walkingLEFT = True
         wizard.standing = False
+        wizard.facing = -1
     else:
         wizard.walkingLEFT = False
 
@@ -310,6 +357,7 @@ while True:
     if keys[pygame.K_d]:
         wizard.walkingRIGHT = True
         wizard.standing = False
+        wizard.facing = 1
     else:
         wizard.walkingRIGHT = False
 
