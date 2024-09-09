@@ -275,7 +275,7 @@ ATTACK_1_testing = [pygame.image.load("assets/Wizard/attack1/a1_1.png"),
           pygame.image.load("assets/Wizard/attack1/a1_6.png"),
           pygame.image.load("assets/Wizard/attack1/a1_7.png")]
 
-FIRE_BALL = [pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_01.png"), (64, 64)),
+FIRE_BALL1 = [pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_01.png"), (64, 64)),
              pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_02.png"), (64, 64)),
              pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_03.png"), (64, 64)),
              pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_04.png"), (64, 64)),
@@ -320,6 +320,13 @@ FIRE_BALL = [pygame.transform.scale(pygame.image.load("assets/fireball/fireBalls
              pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_43.png"), (64, 64)),
              pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_44.png"), (64, 64)),
              pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_45.png"), (64, 64))]
+
+FIRE_BALL = []
+for i in range(1, 46):
+    image_path = f"assets/fireball/fireBallsprite_{i:02}.png"
+    image = pygame.image.load(image_path)
+    scaled_image = pygame.transform.scale(image, (64, 64))
+    FIRE_BALL.append(scaled_image)
 
 
 
