@@ -1,6 +1,10 @@
+import time
+
 import pygame
 from pygame import *
 import sys
+
+
 
 pygame.init()
 
@@ -31,6 +35,7 @@ class player(object):
         self.jumping_ani = 0
         self.attacking_1_ani = 0
         self.facing = 1
+        self.fired = False
 
     def walking_RIGHT(self, SCREEN):
 
@@ -127,13 +132,19 @@ class player(object):
 
 
     def ATTACKING_1(self):
+
+
         if wizard.attacking_1_ani + 1 >= 35:
             wizard.attacking_1_ani = 0
             wizard.attacking_1 = False
 
+
+
         if wizard.facing == 1:
             SCREEN.blit(ATTACK_RIGHT[wizard.attacking_1_ani // 5], (wizard.X_POS, wizard.Y_POS))
             wizard.attacking_1_ani += 1
+
+
 
 
         if wizard.facing == -1:
@@ -151,16 +162,22 @@ class projectile(object):
         self.width = width
         self.height = height
         self.facing = wizard.facing
-        self.vel = 1 * self.facing
+        self.vel = 5 * self.facing
         self.shooting_anim = 0
+        self.cooldown = 100
 
 
     def shot(self, SCREEN):
 
-        if fireball.shooting_anim +1 >= 20:
+        if fireball.shooting_anim +1 >= 45*3+1:
             fireball.shooting_anim = 0
 
-        SCREEN.blit(FIRE_BALL[fireball.shooting_anim // 2], (fireball.x, fireball.y))
+
+
+
+
+        SCREEN.blit(FIRE_BALL[fireball.shooting_anim //3], (fireball.x, fireball.y))
+        fireball.shooting_anim += 1
         fireball.x += fireball.vel
 
         if fireball.x < 0 or fireball.x > 1280:
@@ -267,11 +284,45 @@ FIRE_BALL = [pygame.transform.scale(pygame.image.load("assets/fireball/fireBalls
              pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_07.png"), (64, 64)),
              pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_08.png"), (64, 64)),
              pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_09.png"), (64, 64)),
-             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_10.png"), (64, 64))]
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_10.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_11.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_12.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_13.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_14.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_15.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_16.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_17.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_18.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_19.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_20.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_21.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_22.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_23.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_24.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_25.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_26.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_27.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_28.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_29.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_30.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_31.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_32.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_33.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_34.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_35.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_36.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_37.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_38.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_39.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_40.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_41.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_42.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_43.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_44.png"), (64, 64)),
+             pygame.transform.scale(pygame.image.load("assets/fireball/fireBallsprite_45.png"), (64, 64))]
 
 
 
-#wizard_rect = IDLE.get_rect(center = (wizard.X_POS, wizard.Y_POS))
 
 
 
@@ -291,9 +342,7 @@ FIRE_BALL = [pygame.transform.scale(pygame.image.load("assets/fireball/fireBalls
 
 
 
-'''
-MARIO_STANDING = pygame.transform.scale(pygame.image.load("assets/me_mario.png"), (48, 64))
-'''
+
 
 
 
@@ -307,19 +356,13 @@ while True:
 
     SCREEN.blit(BACKGROUND, (0, 0))
 
-    for fireball in FIREBALLS:
-        pass
-
-        #fireball = projectile(wizard.X_POS+10, wizard.Y_POS+5, 64 ,64)
 
 
 
     for fireball in FIREBALLS:
+
+
         fireball.shot(SCREEN)
-
-
-
-
 
 
 
@@ -331,7 +374,14 @@ while True:
         wizard.standing = False
 
 
-        FIREBALLS.append(projectile(wizard.X_POS+10, wizard.Y_POS+5, 64, 64))
+
+
+        if wizard.attacking_1_ani == 1:
+
+            FIREBALLS.append(projectile(wizard.X_POS+80, wizard.Y_POS+3, 64, 64))
+
+
+
 
 
 
