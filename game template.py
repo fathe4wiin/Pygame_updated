@@ -1,5 +1,6 @@
 import time
 
+
 import pygame
 from pygame import *
 import sys
@@ -164,12 +165,13 @@ class projectile(object):
         self.facing = wizard.facing
         self.vel = 5 * self.facing
         self.shooting_anim = 0
-        self.cooldown = 100
+
+
 
 
     def shot(self, SCREEN):
 
-        if fireball.shooting_anim +1 >= 45*3+1:
+        if fireball.shooting_anim  >= 45*3:
             fireball.shooting_anim = 0
 
 
@@ -261,6 +263,8 @@ ATTACK_RIGHT = [pygame.transform.scale(pygame.image.load("assets/Wizard/attack1/
 
 ATTACK_LEFT = [pygame.transform.flip(image, True, False) for image in ATTACK_RIGHT]
 
+
+
 #fix the image shifting probelm
 print("fix line 236!!!")
 '''for image in ATTACK_LEFT:
@@ -335,26 +339,6 @@ for i in range(1, 46):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 while True:
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -368,6 +352,15 @@ while True:
 
     for fireball in FIREBALLS:
 
+        #pygame.time.delay(100)
+        #last = pygame.time.get_ticks()  # remove this if you want to try it working
+        #now = pygame.time.get_ticks()  # remove this if you want to try it working
+
+
+        #if now - last >= cooldown:  # remove this if you want to try it working
+
+
+
 
         fireball.shot(SCREEN)
 
@@ -376,16 +369,28 @@ while True:
 
     keys = pygame.key.get_pressed()
 
+    #cooldown = 100  # remove this if you want to try it workin
+
     if keys[pygame.K_e]:
+
         wizard.attacking_1 = True
         wizard.standing = False
 
+    if wizard.attacking_1_ani == 20:
+        FIREBALLS.append(projectile(wizard.X_POS + 80, wizard.Y_POS + 3, 64, 64))
 
 
 
-        if wizard.attacking_1_ani == 1:
 
-            FIREBALLS.append(projectile(wizard.X_POS+80, wizard.Y_POS+3, 64, 64))
+
+
+
+
+
+
+
+
+
 
 
 
