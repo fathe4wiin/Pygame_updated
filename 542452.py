@@ -130,7 +130,7 @@ class player(object):
 
 
 
-wizard = player(400, 453, 48, 64)
+wizard = player(400, 1000, 48, 64)
 
 
 

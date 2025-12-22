@@ -39,18 +39,18 @@ class player(object):
         self.fired = False
 
     def walking_RIGHT(self, SCREEN):
-
-        if self.X_POS < 1280 - self.width :
+        scroll_change = 0
+        if self.X_POS < 1280 - 200:
             self.X_POS += self.X_VEL
-
-
-
+        else:
+            scroll_change = self.X_VEL
 
         if self.steps + 1 >= 32:
             self.steps = 0
 
         SCREEN.blit(RIGHT[self.steps // 4], (self.X_POS, self.Y_POS))
         self.steps += 1
+        return scroll_change
 
 
 
@@ -58,20 +58,22 @@ class player(object):
 
 
     def walking_LEFT(self, SCREEN):
-
-        if self.X_POS > 0 :
+        scroll_change = 0
+        if self.X_POS > 200 :
             self.X_POS -= self.X_VEL
             self.walkingLEFT = True
             self.standing = False
-
+        else:
+            scroll_change = -self.X_VEL
+            self.walkingLEFT = True
+            self.standing = False
 
         if self.steps + 1 >= 32:
             self.steps = 0
 
-
-
         SCREEN.blit(LEFT[self.steps // 4], (self.X_POS, self.Y_POS))
         self.steps += 1
+        return scroll_change
 
 
 
@@ -164,7 +166,7 @@ class projectile(object):
         self.width = width
         self.height = height
         self.facing = facing
-        self.vel = 5 * self.facing
+        self.vel = 10 * self.facing
         self.shooting_anim = 0
 
 
@@ -190,7 +192,7 @@ class projectile(object):
             FIREBALLS.pop(FIREBALLS.index(self))
 
 
-wizard = player(400, 453, 48, 64)
+wizard = player(400, 580, 48, 64)
 #fireball = projectile(wizard.X_POS+10, wizard.Y_POS+5, 64, 64)
 
 FIREBALLS = []
@@ -297,21 +299,34 @@ FIRE_BALL_LEFT = [pygame.transform.flip(img, True, False) for img in FIRE_BALL]
 
 
 
-BACKGROUND = pygame.transform.scale(pygame.image.load("assets/background3.png"), (1280, 720))
+bg_images = []
+for i in range(6, 0, -1):
+    bg_image = pygame.image.load(f"assets/background/City2/Bright/bg{i}.png").convert_alpha()
+    bg_image = pygame.transform.scale(bg_image, (1280, 720))
+    bg_images.append(bg_image)
+bg_width = bg_images[0].get_width()
 
-def background_blit():
-    
+def draw_bg(scroll):
+    speed = 1
+    for i in bg_images:
+        rel_x = (scroll * speed) % bg_width
+        SCREEN.blit(i, (-rel_x, 0))
+        SCREEN.blit(i, (-rel_x + bg_width, 0))
+        speed += 0.1
 
 
 
 
+
+
+scroll = 0
 while True:
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
 
-    SCREEN.blit(BACKGROUND, (0, 0))
+    draw_bg(scroll)
 
 
 
@@ -406,11 +421,16 @@ while True:
     if wizard.jumping:
         wizard.JUMPING()
 
+    scroll_change = 0
     if wizard.walkingLEFT and not wizard.walkingRIGHT and not wizard.attacking_1:
-        wizard.walking_LEFT(SCREEN)
+        scroll_change = wizard.walking_LEFT(SCREEN)
 
     if wizard.walkingRIGHT and not wizard.walkingLEFT and not wizard.attacking_1:
-        wizard.walking_RIGHT(SCREEN)
+        scroll_change = wizard.walking_RIGHT(SCREEN)
+
+    scroll += scroll_change
+    for fireball in FIREBALLS:
+        fireball.x -= scroll_change
 
     if wizard.standing or (wizard.walkingLEFT and wizard.walkingRIGHT):
         wizard.STANDING(SCREEN)
