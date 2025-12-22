@@ -217,7 +217,6 @@ steps = 0'''
 
 
 
-BACKGROUND = pygame.transform.scale(pygame.image.load("assets/background3.png"), (1280, 720))
 
 LEFT = [pygame.transform.scale(pygame.image.load("assets/Wizard/L 1.png"), (wizard.width, wizard.height)),
         pygame.transform.scale(pygame.image.load("assets/Wizard/L 2.png"), (wizard.width, wizard.height)),
@@ -295,6 +294,13 @@ FIRE_BALL_LEFT = [pygame.transform.flip(img, True, False) for img in FIRE_BALL]
 
 
 
+
+
+
+BACKGROUND = pygame.transform.scale(pygame.image.load("assets/background3.png"), (1280, 720))
+
+def background_blit():
+    
 
 
 
